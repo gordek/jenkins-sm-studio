@@ -56,6 +56,24 @@ pipeline {
     }
     options { skipDefaultCheckout() }
     stages {
+    stage('Describe') {
+            steps {
+                script {
+                    envs = sh (returnStdout: true, script: "printenv")
+                    print envs
+                    currentBuild.description = "branch: $params.BRANCH_NAME\n"
+                }
+            }
+        }
+        stage('checkout') {
+            steps {
+                checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: params.BRANCH_NAME]],
+                        userRemoteConfigs: scm.userRemoteConfigs
+                ])
+            }
+        }
     stage('Build and Push Base Image') {
             when {
                 expression { params.build_base == true && params.BRANCH_NAME == DEFAULT_BRANCH}
