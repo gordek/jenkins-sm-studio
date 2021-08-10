@@ -11,11 +11,14 @@ IMAGE_TAG := latest
 DOCKER_FILE_PATH ?= .
 APP_IMAGE_CONFIG_PATH ?= .
 
+AWS_ACCOUNT_ID ?= $(shell aws sts get-caller-identity --query "Account")
+
 IMAGE_NAME := $(shell echo "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO}")
 FULL_IMAGE_NAME = ${IMAGE_NAME}:${IMAGE_TAG}
 
 ROLE_ARN := $(shell aws --region ${AWS_REGION} iam list-roles --output text --query "Roles[?starts_with(RoleName, 'AmazonSageMaker-ExecutionRole')].Arn")
 SM_DOMAIN_ID := $(shell aws --region ${AWS_REGION} sagemaker list-domains --output text --query "Domains[].DomainId" )
+
 
 login:
 	aws --region ${AWS_REGION} ecr get-login-password --profile ${AWS_PROFILE} | docker login --username AWS --password-stdin ${IMAGE_NAME}

@@ -3,6 +3,7 @@ JUPYTER_IMAGE = 'jupyter/r-notebook:latest'
 CERBERUS_SECRET_PATH = 'shared/sagemaker-cicd/awssecret'
 AWS_ROLE = 'aiml-sagemaker-test.sagemaker-cicd'
 AWS_REGION = 'us-west-2'
+AWS_ACCOUNT = ""
 ECR_BASE_IMAGE_REPOSITORY = 'sagemaker-studio-p2'
 ECR_GPU_IMAGES_REPOSITORY = 'sagemaker-studio-p2-gpu'
 
