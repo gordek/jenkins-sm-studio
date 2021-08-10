@@ -76,7 +76,8 @@ pipeline {
         }
     stage('Build and Push Base Image') {
             when {
-                expression { params.build_base == true && params.BRANCH_NAME == DEFAULT_BRANCH}
+                // expression { params.build_base == true && params.BRANCH_NAME == DEFAULT_BRANCH}
+                expression { params.build_base == true && params.BRANCH_NAME == 'master'}
             }
             steps {
                 script {
