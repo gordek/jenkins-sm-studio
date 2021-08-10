@@ -46,6 +46,8 @@ pipeline {
         booleanParam(name: 'release', defaultValue: false, description: "release to Sage Maker")
         booleanParam(name: 'STOP_ALL', defaultValue: false, description: "!!!! STOP ALL InService Apps when Release !!!!")
     }
+    options { skipDefaultCheckout() }
+    stages {
     stage('Build and Push Base Image') {
             when {
                 expression { params.build_base == true && params.BRANCH_NAME == DEFAULT_BRANCH}
@@ -65,4 +67,5 @@ pipeline {
                 }
             }
         }
+    }
 }
