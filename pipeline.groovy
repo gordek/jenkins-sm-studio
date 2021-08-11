@@ -51,6 +51,7 @@ pipeline {
         booleanParam(name: 'build_gpu', defaultValue: false, description: "build gpu images, only default branch")
         booleanParam(name: 'rebuild_all_envs', defaultValue: false, description: "Rebuild all environment images")
         string(name: 'build_env', defaultValue: "", description: "Name of environment folder to rebuild")
+        string(name: 'aws_account', defaultValue: "", description: "AWS ACCOUNT ID")
         string(name: 'BRANCH_NAME', defaultValue: "master", description: "Name of branch")
         booleanParam(name: 'release', defaultValue: false, description: "release to Sage Maker")
         booleanParam(name: 'STOP_ALL', defaultValue: false, description: "!!!! STOP ALL InService Apps when Release !!!!")
@@ -83,14 +84,14 @@ pipeline {
             steps {
                 script {
                     // withCerberus([sdbPath: CERBERUS_SECRET_PATH, sdbKeys:['aws-test-account':'AWS_ACCOUNT']]) {
-                        // withAWS(role: "arn:aws:iam::${AWS_ACCOUNT}:role/${AWS_ROLE}", region: AWS_REGION) {
+                        withAWS(role: "arn:aws:iam::${params.aws_account}:role/${AWS_ROLE}", region: AWS_REGION) {
                             ecrlogin(
                                     account: AWS_ACCOUNT,
                                     region: AWS_REGION,
                                     repo: ECR_BASE_IMAGE_REPOSITORY,
                                     docker_path: "${WORKSPACE}/docker/sm-studio-base/Dockerfile"
                             )
-                        // }
+                        }
                     // }
                 }
             }
