@@ -42,59 +42,72 @@ def ecrlogin(Map args) {
     return "${stdout}"
 }
 
-
 pipeline {
     agent any
-
-    parameters {
-        booleanParam(name: 'build_base', defaultValue: false, description: "build base images, only default branch")
-        booleanParam(name: 'build_gpu', defaultValue: false, description: "build gpu images, only default branch")
-        booleanParam(name: 'rebuild_all_envs', defaultValue: false, description: "Rebuild all environment images")
-        string(name: 'build_env', defaultValue: "", description: "Name of environment folder to rebuild")
-        string(name: 'aws_account', defaultValue: "", description: "AWS ACCOUNT ID")
-        string(name: 'BRANCH_NAME', defaultValue: "master", description: "Name of branch")
-        booleanParam(name: 'release', defaultValue: false, description: "release to Sage Maker")
-        booleanParam(name: 'STOP_ALL', defaultValue: false, description: "!!!! STOP ALL InService Apps when Release !!!!")
-    }
-    options { skipDefaultCheckout() }
     stages {
-    stage('Describe') {
+        stage('List production S3 buckets') {
             steps {
-                script {
-                    envs = sh (returnStdout: true, script: "printenv")
-                    print envs
-                    currentBuild.description = "branch: $params.BRANCH_NAME\n"
-                }
-            }
-        }
-        stage('checkout') {
-            steps {
-                checkout([
-                        $class: 'GitSCM',
-                        branches: [[name: params.BRANCH_NAME]],
-                        userRemoteConfigs: scm.userRemoteConfigs
-                ])
-            }
-        }
-    stage('Build and Push Base Image') {
-            when {
-                // expression { params.build_base == true && params.BRANCH_NAME == DEFAULT_BRANCH}
-                expression { params.build_base == true && params.BRANCH_NAME == 'master'}
-            }
-            steps {
-                script {
-                    // withCerberus([sdbPath: CERBERUS_SECRET_PATH, sdbKeys:['aws-test-account':'AWS_ACCOUNT']]) {
                         withAWS(role: "arn:aws:iam::${params.aws_account}:role/${AWS_ROLE}", region: AWS_REGION) {
-                            ecrlogin(
-                                    account: AWS_ACCOUNT,
-                                    region: AWS_REGION,
-                                    repo: ECR_BASE_IMAGE_REPOSITORY,
-                                    docker_path: "${WORKSPACE}/docker/sm-studio-base/Dockerfile"
-                            )
-                        }
-                    // }
+                    sh 'aws s3 ls'
                 }
             }
         }
     }
 }
+
+
+// pipeline {
+//     agent any
+
+//     parameters {
+//         booleanParam(name: 'build_base', defaultValue: false, description: "build base images, only default branch")
+//         booleanParam(name: 'build_gpu', defaultValue: false, description: "build gpu images, only default branch")
+//         booleanParam(name: 'rebuild_all_envs', defaultValue: false, description: "Rebuild all environment images")
+//         string(name: 'build_env', defaultValue: "", description: "Name of environment folder to rebuild")
+//         string(name: 'aws_account', defaultValue: "", description: "AWS ACCOUNT ID")
+//         string(name: 'BRANCH_NAME', defaultValue: "master", description: "Name of branch")
+//         booleanParam(name: 'release', defaultValue: false, description: "release to Sage Maker")
+//         booleanParam(name: 'STOP_ALL', defaultValue: false, description: "!!!! STOP ALL InService Apps when Release !!!!")
+//     }
+//     options { skipDefaultCheckout() }
+//     stages {
+//     stage('Describe') {
+//             steps {
+//                 script {
+//                     envs = sh (returnStdout: true, script: "printenv")
+//                     print envs
+//                     currentBuild.description = "branch: $params.BRANCH_NAME\n"
+//                 }
+//             }
+//         }
+//         stage('checkout') {
+//             steps {
+//                 checkout([
+//                         $class: 'GitSCM',
+//                         branches: [[name: params.BRANCH_NAME]],
+//                         userRemoteConfigs: scm.userRemoteConfigs
+//                 ])
+//             }
+//         }
+//     stage('Build and Push Base Image') {
+//             when {
+//                 // expression { params.build_base == true && params.BRANCH_NAME == DEFAULT_BRANCH}
+//                 expression { params.build_base == true && params.BRANCH_NAME == 'master'}
+//             }
+//             steps {
+//                 script {
+//                     // withCerberus([sdbPath: CERBERUS_SECRET_PATH, sdbKeys:['aws-test-account':'AWS_ACCOUNT']]) {
+//                         withAWS(role: "arn:aws:iam::${params.aws_account}:role/${AWS_ROLE}", region: AWS_REGION) {
+//                             ecrlogin(
+//                                     account: AWS_ACCOUNT,
+//                                     region: AWS_REGION,
+//                                     repo: ECR_BASE_IMAGE_REPOSITORY,
+//                                     docker_path: "${WORKSPACE}/docker/sm-studio-base/Dockerfile"
+//                             )
+//                         }
+//                     // }
+//                 }
+//             }
+//         }
+//     }
+// }
