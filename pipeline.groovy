@@ -1,7 +1,7 @@
 
 JUPYTER_IMAGE = 'jupyter/r-notebook:latest'
 CERBERUS_SECRET_PATH = 'shared/sagemaker-cicd/awssecret'
-AWS_ROLE = 'DataBrewCustom'
+AWS_ROLE = 'jenkins-dev-test'
 AWS_REGION = 'us-west-2'
 AWS_ACCOUNT = ""
 ECR_BASE_IMAGE_REPOSITORY = 'sagemaker-studio-p2'
