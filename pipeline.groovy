@@ -57,7 +57,7 @@ pipeline {
     stages {
         stage('List production S3 buckets') {
             steps {
-                        withAWS(profile:'default') {
+                    withAWS(credentials: 'aws-cred') {
                     sh 'aws s3 ls'
                     //  sh 'aws iam get-user'
                 }
