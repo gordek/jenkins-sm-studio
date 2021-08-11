@@ -44,6 +44,16 @@ def ecrlogin(Map args) {
 
 pipeline {
     agent any
+        parameters {
+//         booleanParam(name: 'build_base', defaultValue: false, description: "build base images, only default branch")
+//         booleanParam(name: 'build_gpu', defaultValue: false, description: "build gpu images, only default branch")
+//         booleanParam(name: 'rebuild_all_envs', defaultValue: false, description: "Rebuild all environment images")
+//         string(name: 'build_env', defaultValue: "", description: "Name of environment folder to rebuild")
+        string(name: 'aws_account', defaultValue: "", description: "AWS ACCOUNT ID")
+//         string(name: 'BRANCH_NAME', defaultValue: "master", description: "Name of branch")
+//         booleanParam(name: 'release', defaultValue: false, description: "release to Sage Maker")
+//         booleanParam(name: 'STOP_ALL', defaultValue: false, description: "!!!! STOP ALL InService Apps when Release !!!!")
+    }
     stages {
         stage('List production S3 buckets') {
             steps {
