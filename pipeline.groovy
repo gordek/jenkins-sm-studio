@@ -59,8 +59,8 @@ pipeline {
             steps {
                     sh('aws sts get-caller-identity')
                     withAWS(role: "arn:aws:iam::${params.aws_account}:role/${AWS_ROLE}", region: AWS_REGION) {
-                    // sh 'aws s3 ls'
-                     sh 'aws iam get-user'
+                    sh 'aws s3 ls'
+//                      sh 'aws iam get-user'
                 }
             }
         }
