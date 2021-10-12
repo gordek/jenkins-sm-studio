@@ -1,6 +1,11 @@
-def image
+pipeline {
+    agent any
 
-AWS_ACCOUNT="339335539743"
-AWS_REGION="us-west-2"
-AWS_ROLE="CI.Hyperflow"
-PYTHON_VERSION="3.7"
+    stages {
+        stage('Hello') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+    }
+}
